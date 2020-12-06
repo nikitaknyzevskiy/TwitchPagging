@@ -38,7 +38,6 @@ class MainFragment : Fragment(), Observer<PagedList<GameFull>> {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel.loadPage(0)
 
         GlobalScope.launch(Dispatchers.IO) {
             viewModel.games().flow.collectLatest { data ->

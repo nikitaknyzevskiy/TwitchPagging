@@ -19,21 +19,14 @@ class GameDataSource(
         state: PagingState<Int, GameFull>
     ): MediatorResult {
 
-        val loadKey: Int? = when (loadType) {
-            LoadType.REFRESH -> null
-            LoadType.PREPEND ->
-                return MediatorResult.Success(endOfPaginationReached = true)
-            LoadType.APPEND -> {
-                val lastItem = state.lastItemOrNull()
-                    ?: return MediatorResult.Success(
-                        endOfPaginationReached = true
-                    )
-                page++
-                page
-            }
+        try {
+            gameRepository.load(page)
+            page++
+        } catch (e: Exception) {
+            return MediatorResult.Success(
+                    endOfPaginationReached = true
+            )
         }
-
-        gameRepository.load(loadKey?:0)
 
         return MediatorResult.Success(
             endOfPaginationReached = false
